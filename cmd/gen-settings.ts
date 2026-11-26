@@ -851,6 +851,13 @@ const fullscreen: Field[] = [
     .enum(kDisplayModes)
     .emptyMeans("single page in presentation, the current layout in windowed fullscreen")
     .ver("3.7"),
+  field(
+    "ToggleOnDoubleClick",
+    Bool,
+    false,
+    "if true, double-clicking an empty part of the document (not over text, a link or an image) " +
+      "enters or leaves fullscreen mode (Shift+Ctrl+L / F11)",
+  ).ver("3.7"),
 ];
 
 const externalViewer: Field[] = [

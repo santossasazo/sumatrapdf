@@ -554,20 +554,22 @@ static const FieldInfo gFullscreenFields[] = {
     {offsetof(Fullscreen, showMenubar), SettingType::Bool, false},
     {offsetof(Fullscreen, displayMode), SettingType::String, (intptr_t)"", false, false, gEnumFullscreenDisplayMode,
      "single page in presentation, the current layout in windowed fullscreen"},
+    {offsetof(Fullscreen, toggleOnDoubleClick), SettingType::Bool, false},
 };
 static const StructInfo gFullscreenInfo = {
     sizeof(Fullscreen),
     (u16)dimof(gFullscreenFields),
     gFullscreenFields,
-    "ShowToolbar\0Toolbar\0ShowMenubar\0DisplayMode",
+    "ShowToolbar\0Toolbar\0ShowMenubar\0DisplayMode\0ToggleOnDoubleClick",
     "legacy bool for fullscreen toolbar; if Fullscreen.Toolbar is empty, derived as show/hide (internal; use "
     "Fullscreen.Toolbar instead)\0toolbar mode in fullscreen: show (pinned), hide (no toolbar), overlay (toolbar "
     "floats over the page, only shown when the mouse is near it). if empty, derived from Fullscreen.ShowToolbar\0if "
     "true, show the menu bar in fullscreen mode\0page layout in presentation (Ctrl+L) and windowed fullscreen "
     "(Shift+Ctrl+L / F11). empty keeps the current behavior: presentation uses single page, windowed fullscreen keeps "
-    "the existing layout",
+    "the existing layout\0if true, double-clicking an empty part of the document (not over text, a link or an image) "
+    "enters or leaves fullscreen mode (Shift+Ctrl+L / F11)",
     false};
-static_assert(dimof(gFullscreenFields) == 4);
+static_assert(dimof(gFullscreenFields) == 5);
 
 static const FieldInfo gSelectionHandlerFields[] = {
     {offsetof(SelectionHandler, url), SettingType::String, 0},

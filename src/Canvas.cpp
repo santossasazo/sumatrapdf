@@ -2080,6 +2080,11 @@ static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
     }
 
     if (!pageEl) {
+        // Fullscreen.ToggleOnDoubleClick: an empty spot enters or leaves fullscreen
+        bool noModifiers = (key & (MK_CONTROL | MK_SHIFT)) == 0;
+        if (isLeft && noModifiers && gSettings->fullscreen.toggleOnDoubleClick && !win->InPresentation()) {
+            ToggleFullScreen(win);
+        }
         return;
     }
     if (pageEl->Is(kindPageElementDest)) {

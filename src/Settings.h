@@ -504,6 +504,10 @@ struct Fullscreen {
     // (Shift+Ctrl+L / F11). empty keeps the current behavior: presentation
     // uses single page, windowed fullscreen keeps the existing layout
     Str displayMode;
+    // if true, double-clicking an empty part of the document (not over
+    // text, a link or an image) enters or leaves fullscreen mode
+    // (Shift+Ctrl+L / F11)
+    bool toggleOnDoubleClick;
 };
 
 // customization options for image files UI

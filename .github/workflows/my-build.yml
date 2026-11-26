@@ -1,0 +1,25 @@
+name: My build
+on:
+  workflow_dispatch:
+  push:
+    branches: [dblclick-fullscreen]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2025-vs2026
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@v2
+      - name: Build release x64 (SumatraPDF + SumatraPDF-static)
+        run: bun .\cmd\build.ts -all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SumatraPDF-dblclick-fullscreen
+          path: |
+            out/rel64/SumatraPDF-static.exe
+            out/rel64/SumatraPDF.exe
+            out/rel64/*.dll
