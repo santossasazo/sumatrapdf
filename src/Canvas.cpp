@@ -1987,6 +1987,8 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
 
     if (win->windowMode == WindowMode::Presentation) {
         /* in presentation mode, change pages on left/right-clicks */
+        gPresClickPageNo = tab->ctrl->CurrentPageNo();
+        gPresClickTime = (DWORD)GetMessageTime();
         if ((key & MK_SHIFT)) {
             tab->ctrl->GoToPrevPage();
         } else {
@@ -1995,6 +1997,36 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
         ReadAloudOnUserViewChanged(win);
         return;
     }
+}
+
+// page shown before the last presentation click turned it, so that a
+// double-click that leaves presentation doesn't also move a page
+static int gPresClickPageNo = -1;
+static DWORD gPresClickTime = 0;
+
+// Fullscreen.DoubleClick: an empty spot enters fullscreen or presentation, or leaves it
+static void DblClkToggleFullScreen(MainWindow* win) {
+    Str mode = gSettings->fullscreen.doubleClick;
+    if (len(mode) == 0 || str::EqI(mode, StrL("off"))) {
+        return;
+    }
+
+    if (win->IsFullScreenOrPresentation()) {
+        bool recentClick = (DWORD)GetMessageTime() - gPresClickTime <= GetDoubleClickTime();
+        if (win->InPresentation() && recentClick && win->ctrl->ValidPageNo(gPresClickPageNo)) {
+            win->ctrl->GoToPage(gPresClickPageNo, false);
+        }
+        gPresClickPageNo = -1;
+        ExitFullScreen(win);
+        return;
+    }
+
+    bool presentation = str::EqI(mode, StrL("presentation"));
+    if (str::EqI(mode, StrL("last"))) {
+        presentation = gSettings->fullscreen.lastWasPresentation;
+    }
+    // only DisplayModel supports presentation, like TogglePresentationMode
+    ToggleFullScreen(win, presentation && win->AsFixed() != nullptr);
 }
 
 static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
@@ -2080,10 +2112,9 @@ static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
     }
 
     if (!pageEl) {
-        // Fullscreen.ToggleOnDoubleClick: an empty spot enters or leaves fullscreen
         bool noModifiers = (key & (MK_CONTROL | MK_SHIFT)) == 0;
-        if (isLeft && noModifiers && gSettings->fullscreen.toggleOnDoubleClick && !win->InPresentation()) {
-            ToggleFullScreen(win);
+        if (isLeft && noModifiers) {
+            DblClkToggleFullScreen(win);
         }
         return;
     }

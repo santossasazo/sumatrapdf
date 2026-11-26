@@ -8287,6 +8287,8 @@ void EnterFullScreen(MainWindow* win, bool presentation) {
     } else {
         win->windowMode = WindowMode::FullScreen;
     }
+    // for Fullscreen.DoubleClick = last
+    gSettings->fullscreen.lastWasPresentation = presentation;
 
     // Save window style and rect before hiding anything, since
     // SetMenu(nullptr) can alter the window style bits.

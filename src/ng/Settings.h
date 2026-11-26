@@ -501,10 +501,15 @@ struct Fullscreen {
     // (Shift+Ctrl+L / F11). empty keeps the current behavior: presentation
     // uses single page, windowed fullscreen keeps the existing layout
     Str displayMode;
-    // if true, double-clicking an empty part of the document (not over
-    // text, a link or an image) enters or leaves fullscreen mode
-    // (Shift+Ctrl+L / F11)
-    bool toggleOnDoubleClick;
+    // what double-clicking an empty part of the document (not over text, a
+    // link or an image) does: off does nothing, fullscreen enters
+    // fullscreen (Shift+Ctrl+L / F11), presentation enters presentation
+    // (Ctrl+L), last enters whichever of the two was entered last. in
+    // fullscreen or presentation, it leaves that mode
+    Str doubleClick;
+    // true if presentation, not fullscreen, was the mode entered last (for
+    // DoubleClick = last)
+    bool lastWasPresentation;
 };
 
 // customization options for image files UI

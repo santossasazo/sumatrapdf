@@ -547,6 +547,7 @@ static const char* gEnumFullscreenToolbar[] = {"", "show", "hide", "overlay", nu
 static const char* gEnumFullscreenDisplayMode[] = {
     "",           "automatic",         "single page",          "facing", "book view",
     "continuous", "continuous facing", "continuous book view", nullptr};
+static const char* gEnumFullscreenDoubleClick[] = {"off", "fullscreen", "presentation", "last", nullptr};
 static const FieldInfo gFullscreenFields[] = {
     {offsetof(Fullscreen, showToolbar), SettingType::Bool, false, true},
     {offsetof(Fullscreen, toolbar), SettingType::String, (intptr_t)"hide", false, false, gEnumFullscreenToolbar,
@@ -554,22 +555,26 @@ static const FieldInfo gFullscreenFields[] = {
     {offsetof(Fullscreen, showMenubar), SettingType::Bool, false},
     {offsetof(Fullscreen, displayMode), SettingType::String, (intptr_t)"", false, false, gEnumFullscreenDisplayMode,
      "single page in presentation, the current layout in windowed fullscreen"},
-    {offsetof(Fullscreen, toggleOnDoubleClick), SettingType::Bool, false},
+    {offsetof(Fullscreen, doubleClick), SettingType::String, (intptr_t)"off", false, false, gEnumFullscreenDoubleClick,
+     nullptr},
+    {offsetof(Fullscreen, lastWasPresentation), SettingType::Bool, false, true},
 };
 static const StructInfo gFullscreenInfo = {
     sizeof(Fullscreen),
     (u16)dimof(gFullscreenFields),
     gFullscreenFields,
-    "ShowToolbar\0Toolbar\0ShowMenubar\0DisplayMode\0ToggleOnDoubleClick",
+    "ShowToolbar\0Toolbar\0ShowMenubar\0DisplayMode\0DoubleClick\0LastWasPresentation",
     "legacy bool for fullscreen toolbar; if Fullscreen.Toolbar is empty, derived as show/hide (internal; use "
     "Fullscreen.Toolbar instead)\0toolbar mode in fullscreen: show (pinned), hide (no toolbar), overlay (toolbar "
     "floats over the page, only shown when the mouse is near it). if empty, derived from Fullscreen.ShowToolbar\0if "
     "true, show the menu bar in fullscreen mode\0page layout in presentation (Ctrl+L) and windowed fullscreen "
     "(Shift+Ctrl+L / F11). empty keeps the current behavior: presentation uses single page, windowed fullscreen keeps "
-    "the existing layout\0if true, double-clicking an empty part of the document (not over text, a link or an image) "
-    "enters or leaves fullscreen mode (Shift+Ctrl+L / F11)",
+    "the existing layout\0what double-clicking an empty part of the document (not over text, a link or an image) does: "
+    "off does nothing, fullscreen enters fullscreen (Shift+Ctrl+L / F11), presentation enters presentation (Ctrl+L), "
+    "last enters whichever of the two was entered last. in fullscreen or presentation, it leaves that mode\0true if "
+    "presentation, not fullscreen, was the mode entered last (for DoubleClick = last)",
     false};
-static_assert(dimof(gFullscreenFields) == 5);
+static_assert(dimof(gFullscreenFields) == 6);
 
 static const FieldInfo gSelectionHandlerFields[] = {
     {offsetof(SelectionHandler, url), SettingType::String, 0},

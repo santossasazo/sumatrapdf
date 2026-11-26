@@ -852,12 +852,22 @@ const fullscreen: Field[] = [
     .emptyMeans("single page in presentation, the current layout in windowed fullscreen")
     .ver("3.7"),
   field(
-    "ToggleOnDoubleClick",
+    "DoubleClick",
+    Str,
+    "off",
+    "what double-clicking an empty part of the document (not over text, a link or an image) does: " +
+      "off does nothing, fullscreen enters fullscreen (Shift+Ctrl+L / F11), presentation enters " +
+      "presentation (Ctrl+L), last enters whichever of the two was entered last. " +
+      "in fullscreen or presentation, it leaves that mode",
+  )
+    .enum(["off", "fullscreen", "presentation", "last"])
+    .ver("3.7"),
+  field(
+    "LastWasPresentation",
     Bool,
     false,
-    "if true, double-clicking an empty part of the document (not over text, a link or an image) " +
-      "enters or leaves fullscreen mode (Shift+Ctrl+L / F11)",
-  ).ver("3.7"),
+    "true if presentation, not fullscreen, was the mode entered last (for DoubleClick = last)",
+  ).internal(),
 ];
 
 const externalViewer: Field[] = [
