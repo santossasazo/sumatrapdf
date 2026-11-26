@@ -1740,6 +1740,11 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
     }
 }
 
+// page shown before the last presentation click turned it, so that a
+// double-click that leaves presentation doesn't also move a page
+static int gPresClickPageNo = -1;
+static DWORD gPresClickTime = 0;
+
 static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
     if (win->measurementToolbar) {
         return;
@@ -1998,11 +2003,6 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
         return;
     }
 }
-
-// page shown before the last presentation click turned it, so that a
-// double-click that leaves presentation doesn't also move a page
-static int gPresClickPageNo = -1;
-static DWORD gPresClickTime = 0;
 
 // Fullscreen.DoubleClick: an empty spot enters fullscreen or presentation, or leaves it
 static void DblClkToggleFullScreen(MainWindow* win) {
